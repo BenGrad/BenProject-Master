@@ -122,7 +122,7 @@ def hebrew_text():
     )
 
 
-@app.route('/data/FireDataset' , methods = ['GET' , 'POST'])
+@app.route('/data/Fi1ataset' , methods = ['GET' , 'POST'])
 def Teonot2017():
 
     print("Fire Dataset")
