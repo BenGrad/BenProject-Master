@@ -1,0 +1,27 @@
+﻿{% extends "layout.html" %}
+
+{% block content %}
+
+<h2 class="heb">בדף זה נתאר את קבצי הדאטה ונפנה אליהם</h2>
+<h3></h3>
+
+<div class="row my-grid-borders">
+    <p> </p>
+</div>
+<div class="row my-grid-borders">
+    <div class="col-md-2 my-grid-borders"><img class="contain" src={{ car_accident1 }} alt='Missing'></div>
+    <div class="col-md-2 my-grid-borders"><img class="contain" src={{ car_accident2 }} alt='Missing'></div>
+
+</div>
+
+</div>
+<div class="row my-grid-borders">
+    <div class="col-md-5 my-grid-borders"><a href="{{ url_for('Teonot2017') }}">Fire Dataset</a></div>
+    <div class="col-md-5 my-grid-borders">
+        <p ckass="heb">  דף הדאטה של שריפות</p>
+
+        
+    </div>
+</div>
+
+{% endblock %}
