@@ -2,15 +2,28 @@
 ### ----------------------------------------------------------- ###
 ### --- include all software packages and libraries needed ---- ###
 ### ----------------------------------------------------------- ###
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+from os import path
+
+
+
 from datetime import datetime
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms import Form, BooleanField, PasswordField
-from wtforms import TextField, TextAreaField, SelectField, DateField
-from wtforms import validators, ValidationError
+from wtforms import Form
+from wtforms import TextField, TextAreaField, SelectField, SelectMultipleField, DateField, DateTimeField
+from wtforms import StringField, PasswordField, HiddenField, SubmitField
+from wtforms import IntegerField, DecimalField, FloatField, RadioField, BooleanField
 
+from wtforms import validators
+from wtforms import ValidationError
 from wtforms.validators import DataRequired
+from wtforms.validators import InputRequired
+
+from wtforms.fields.html5 import DateField
 ### ----------------------------------------------------------- ###
 
 
@@ -87,3 +100,10 @@ class CollapseForm(FlaskForm):
 #class DataParametersFormStructure(FlaskForm):
 #    
 #    submit = SubmitField('Submit')
+
+class QueryForm(FlaskForm):
+    cities =  SelectMultipleField('Select Multiple:', validators = [DataRequired()] )
+    start_date = DateField('' , format='%Y-%m-%d' , validators = [DataRequired()])
+    end_date   = DateField('' , format='%Y-%m-%d' , validators = [DataRequired()])
+    submit = SubmitField('Submit')
+

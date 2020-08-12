@@ -31,11 +31,16 @@ import base64
 from os import path
 
 from flask   import Flask, render_template, flash, request
+from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, StringField, PasswordField, validators
 from wtforms import TextField, TextAreaField, SubmitField, SelectField, DateField
 from wtforms import ValidationError
+from wtforms.fields.html5 import DateField , DateTimeField
 
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
+from MyFinalProject.Models.QueryFormStructure import QueryForm
 from MyFinalProject.Models.QueryFormStructure import QueryFormStructure 
 from MyFinalProject.Models.QueryFormStructure import LoginFormStructure 
 from MyFinalProject.Models.QueryFormStructure import UserRegistrationFormStructure 
@@ -44,6 +49,15 @@ from MyFinalProject.Models.QueryFormStructure import UserRegistrationFormStructu
 from flask_bootstrap import Bootstrap
 bootstrap = Bootstrap(app)
 db_Functions = create_LocalDatabaseServiceRoutines() 
+
+#Function for selecting mehozot
+def get_mehozot_choices():
+    df_short_state = pd.read_csv(path.join(path.dirname(__file__), "..\\static\\data\\FireDataset.csv"))
+    df1 = df_short_state.groupby('מחוז').sum()
+    l = df1.index
+    m = list(zip(l , l))
+    return m
+
 
 
 @app.route('/')
@@ -104,15 +118,6 @@ def data():
         
     )
 
-@app.route('/project_resources')
-def project_resources():
-
-    print("Project Resources")
-
-    """Renders the about page."""
-    return render_template(
-        'project_resources.html'
-    )
 
 @app.route('/hebrew_text')
 def hebrew_text():
@@ -122,7 +127,7 @@ def hebrew_text():
     )
 
 
-@app.route('/data/Fi1ataset' , methods = ['GET' , 'POST'])
+@app.route('/data/FireDataset' , methods = ['GET' , 'POST'])
 def Teonot2017():
 
     print("Fire Dataset")
@@ -154,27 +159,7 @@ def Teonot2017():
     )
 
 
-@app.route('/data/assignment_5130' , methods = ['GET' , 'POST'])
-def assignment_5130():
 
-    print("5130")
-
-    return render_template(
-        'assignment_5130.html'
-    )
-
-@app.route('/tracking_changes')
-def tracking_changes():
-
-    print("Log")
-
-    """Renders the about page."""
-    return render_template(
-        'tracking_changes.html',
-        title='Tracking changes to the site',
-        year=datetime.now().year,
-        message=''
-    )
 @app.route('/register', methods=['GET', 'POST'])
 def Register():
     form = UserRegistrationFormStructure(request.form)
@@ -205,7 +190,7 @@ def Login():
     if (request.method == 'POST' and form.validate()):
         if (db_Functions.IsLoginGood(form.username.data, form.password.data)):
             flash('Login approved!')
-            #return redirect('<were to go if login is good!')
+            return redirect('DataQuery')
         else:
             flash('Error in - Username and/or password')
    
@@ -214,7 +199,104 @@ def Login():
         form=form, 
         title='Login to data analysis',
         year=datetime.now().year,
-        repository_name='Pandas',
         )
+
+
+
+
+@app.route('/DataQuery' , methods = ['GET' , 'POST'])
+def DataQuery():
+
+
+    form1 = QueryForm()
+    chart1 = ""
+    fig_image = ""
+
+    #take the variable df and put the dataset inside of it
+    df = pd.read_csv(path.join(path.dirname(__file__), 'static/data/FireDataset.csv'))
+
+    #creating a new datetime column
+    df['DateTime'] = pd.to_datetime(df[['Year','Month','Day']])
+    #delete the unnecessary columns (year,month,date,region,country,state) (1 stands for columns)
+    df = df.drop(['Year','Month','Day','Region', 'Country', 'State',],1)
+
+
+    #Create new variable called city_Pulldown and filter it to have only the cities by using the command ("df.City.to_list()")
+    city_Pulldown = df.City.to_list()
+
+    #create a new object from type set which automatically takes only one of each name that appears
+    #thereby removing duplicates and then converts it back to a list called city_Pulldown
+    city_Pulldown = list(set(city_Pulldown))
+
+    #create a new format of cities that presents as city1,city1 in order to take the first city as the option you select 
+    #in the dropdown menu and the second city as the one that's sent to the server for all the code and calculations
+    city_Pulldown = list(zip(city_Pulldown,city_Pulldown))
+      
+
+
+    #bring city pulldown and take choices into variable
+    form1.cities.choices = city_Pulldown
+    
+
+
+
+    if request.method == 'POST':
+
+        
+        #start_date takes the startdate from form1 (IE the input in DataQuery.html)
+        start_date = form1.start_date.data
+        #same as start_date
+        end_date = form1.end_date.data
+        cities = form1.cities.data
+
+
+
+        city_List = cities
+
+        #this is where you filter out the other cities
+        df = df[df.City.isin(city_List)]
+
+        #use the second variable (df1) and use unstack to set the city's names
+        # as the columns title for the temperature of each city (groupby sets it by date)
+        df1 = df.groupby(['DateTime', 'City']).mean().unstack()
+
+        
+        #create new variable called df2 and take df1 with the dates that the user input.
+        df2 = df1[start_date : end_date]
+
+        # create plot object ready for graphs
+        fig = plt.figure()
+        ax = fig.add_subplot()
+
+
+
+       
+
+        df2.plot(ax = ax, grid=True)
+        fig_image = plot_to_img(fig)
+        #df2 = plot_to_img(fig)
+
+    else:
+        form1.start_date.data = df.DateTime.min() 
+        form1.end_date.data = df.DateTime.max()
+
+    return render_template(
+        'DataQuery.html',
+        form1 = form1,
+        fig_image = fig_image, #this is the one thats displayed
+    )
+
+def plot_to_img(fig):
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    pngImageB64String = "data:image/png;base64,"
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    return pngImageB64String
+
+
+
+
+
+
 
 

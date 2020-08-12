@@ -28,6 +28,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="MyFinalProject\Models\DataQuery.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MyFinalProject\Models\QueryFormStructure.py">
       <SubType>Code</SubType>
     </Compile>
@@ -49,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MyFinalProject\static\data\FireDataset.csv" />
+    <Content Include="MyFinalProject\static\data\users.csv" />
     <Content Include="MyFinalProject\static\imgs\american_flag.jpg" />
     <Content Include="MyFinalProject\static\imgs\Ben.jpg" />
     <Content Include="MyFinalProject\static\imgs\bush.jpg" />
@@ -58,12 +62,11 @@
     <Content Include="MyFinalProject\static\imgs\OnFire.jpg" />
     <Content Include="MyFinalProject\static\imgs\tichonet.png" />
     <Content Include="MyFinalProject\static\imgs\trump.jpg" />
-    <Content Include="MyFinalProject\templates\assignment_5130.html" />
     <Content Include="MyFinalProject\templates\data.html" />
     <Content Include="MyFinalProject\templates\FireDataset.html" />
-    <Content Include="MyFinalProject\templates\tracking_changes.html" />
     <Content Include="MyFinalProject\templates\login.html" />
     <Content Include="MyFinalProject\templates\register.html" />
+    <Content Include="MyFinalProject\templates\DataQuery.html" />
     <Content Include="requirements.txt" />
     <Content Include="MyFinalProject\static\content\bootstrap.css" />
     <Content Include="MyFinalProject\static\content\bootstrap.min.css" />

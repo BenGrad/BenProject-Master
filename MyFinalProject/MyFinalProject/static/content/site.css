@@ -16,6 +16,10 @@ textarea {
     max-width: 280px;
 }
 
+.center {
+    text-align: center;
+}
+
 /* styles for validation helpers */
 .field-validation-error {
     color: #b94a48;

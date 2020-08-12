@@ -1,0 +1,102 @@
+﻿{% extends "layout.html" %}
+
+{% block content %}
+
+
+<div class="row" style="background-image: url('/static/Pics/bush.jpg'); background-size:100% 100%; color:black">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-10">
+        <div class="row" ">
+
+
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for message in messages %}
+            <h4 style="color:red">test</h4>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <br />
+        </div>
+        <div class="row" ">
+
+            <form method=post>
+                {{ form1.csrf }}
+                {{ form1.csrf_token }}
+                <h1> DataQuery </h1>
+                </td>
+                <td>
+                </td>
+                </tr>
+                <tr>
+                    </td>
+                    <td>
+                        <h3> Enter the cities you want here</h3>
+                        {{ form1.states }}
+
+                        {{form1.cities}}
+                        <br />
+                    </td>
+                    <td>
+                    <td>
+                    <td>
+
+                    <td>
+                        {{ form1.start_date.label }}  <h4 style="color:midnightblue"><b>Start Date</b></h4>
+                    </td>
+                    <td>
+                        {{ form1.start_date }}
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form1.end_date.label }} <h4 style="color:midnightblue"><b>End Date</b></h4>
+                    </td>
+                    <td>
+                        {{ form1.end_date }}
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td class="input submit"> <input type="submit" value="Calculate"> </td>
+                </tr>
+                </table>
+            </form>
+        </div>
+        <br /><br /><br /><br />
+        <div class="row">
+            <table>
+                <tr>
+                    <td>
+                        {{ raw_data_table | safe}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+
+
+                <h1> The graph will be displayed here</h1>
+                <img src={{ fig_image }} class="img-thumbnail"alt=""> 
+
+            </div>
+        </div>
+        <br /><br /><br />
+    </div>
+    <div class="col-sm-1">
+    </div>
+</div>
+
+
+        {% endblock %}
+
+
